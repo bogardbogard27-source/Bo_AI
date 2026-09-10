@@ -1,0 +1,242 @@
+================================================================================
+Bo_AI — Termux Local AI Server
+Uncensored, Bias-Free, Locally-Hosted AI on Android
+================================================================================
+
+QUICK START (5 minutes)
+
+1. Clone the repository:
+   git clone https://github.com/bogardbogard27-source/Bo_AI.git
+   cd Bo_AI
+
+2. Make scripts executable:
+   chmod +x install.sh start.sh test.sh models.sh
+
+3. Install dependencies (5-15 minutes):
+   ./install.sh
+
+4. Download a model (no corporate censorship):
+   ./models.sh download
+   
+   Recommended: Dolphin 3.0 (most unrestricted)
+   Save to: ~/models/dolphin-3.0.gguf
+
+5. Start the server:
+   MODEL_PATH="$HOME/models/dolphin-3.0.gguf" ./start.sh
+
+6. Test in another Termux session:
+   ./test.sh
+
+7. Connect Chatbox AI:
+   - Base URL: http://127.0.0.1:8080/v1
+   - API Key: local
+   - Model: local-model
+   - Temperature: 0.0 (for factual accuracy, no hallucinations)
+
+8. Start chatting:
+   Uncensored. Unbiased. Local. Yours.
+
+================================================================================
+FEATURES
+================================================================================
+
+✓ No corporate safety censorship (model-dependent choice)
+✓ No political/social bias (use neutral models)
+✓ No logical hallucinations (temperature 0.0, proper context)
+✓ 100% local (your data never leaves your phone)
+✓ OpenAI-compatible API (works with any compatible client)
+✓ Free & open-source
+✓ No cloud, no tracking, no ads
+
+================================================================================
+CONFIGURATION
+================================================================================
+
+Edit config.sh to customize:
+  - Model path
+  - Server host/port
+  - Context size (4096 = balanced)
+  - Thread count (match your CPU cores)
+  - Temperature (0.0 = factual, no randomness)
+
+Example:
+  nano config.sh
+  ./start.sh
+
+Or override at runtime:
+  CTX_SIZE="2048" THREADS="4" ./start.sh
+
+================================================================================
+UNCENSORED MODEL RECOMMENDATIONS
+================================================================================
+
+Model                    | Size  | Restrictions | Best For
+------------------------+-------+--------------+------------------------
+Dolphin 3.0              | 7B    | None         | Raw reasoning, no filters
+Hermes 2                 | 7B    | Low          | Factual, instruction-follow
+Mistral                  | 7B    | Low          | Balanced, fast
+Llama 2                  | 7B    | Very Low     | Open-source, unrestricted
+Neural Chat              | 7B    | None         | Unfiltered conversation
+
+Download from HuggingFace:
+  https://huggingface.co/cognitivecomputations/dolphin-3.0-mistral-7b-gguf
+  https://huggingface.co/TheBloke/Hermes-2-Mistral-7B-GGUF
+  https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF
+
+================================================================================
+PERFORMANCE TIPS
+================================================================================
+
+Low RAM (< 2GB):
+  CTX_SIZE="2048" THREADS="2" ./start.sh
+
+Mid RAM (2-4GB):
+  CTX_SIZE="4096" THREADS="2" ./start.sh   (default)
+
+High RAM (4-8GB):
+  CTX_SIZE="4096" THREADS="4" ./start.sh
+
+Great RAM (8GB+):
+  CTX_SIZE="8192" THREADS="6" ./start.sh
+
+If slow:           Reduce CTX_SIZE or THREADS
+If crashes:        Reduce CTX_SIZE or close other apps
+If no context:     Increase CTX_SIZE
+If hallucinating:  Set temperature to 0.0 in Chatbox
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Q: "Model not found"
+A: mkdir -p ~/models
+   Download a GGUF file to ~/models/
+
+Q: "llama-server not found"
+A: ./install.sh
+   Wait for build to complete. Check for cmake/clang errors.
+
+Q: Chatbox can't connect
+A: 1. Keep ./start.sh running in background
+   2. Check URL is http://127.0.0.1:8080/v1 (not localhost)
+   3. Test with: ./test.sh
+   4. Ensure port 8080 is available (not in use by another app)
+
+Q: Server crashes
+A: Reduce CTX_SIZE (e.g., 2048)
+   Close other apps
+   Use a smaller model (7B instead of 70B)
+
+Q: Slow responses
+A: Reduce CTX_SIZE
+   Set temperature to 0.0 (greedy, fastest)
+   Close other apps
+   Check phone isn't throttling (too hot)
+
+Q: Model gives wrong answers (hallucinations)
+A: Set temperature to 0.0 in Chatbox
+   Use larger context window (CTX_SIZE)
+   Try different model (Dolphin, Hermes more factual)
+   Give specific system prompt
+
+================================================================================
+API EXAMPLES
+================================================================================
+
+List models:
+  curl http://127.0.0.1:8080/v1/models
+
+Chat (non-streaming):
+  curl -X POST http://127.0.0.1:8080/v1/chat/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+      "model": "local-model",
+      "messages": [{"role": "user", "content": "What is 2+2?"}],
+      "temperature": 0.0
+    }'
+
+Chat (streaming):
+  curl -X POST http://127.0.0.1:8080/v1/chat/completions \
+    -H "Content-Type: application/json" \
+    -d '{
+      "model": "local-model",
+      "messages": [{"role": "user", "content": "Hello"}],
+      "stream": true
+    }'
+
+================================================================================
+CHATBOX AI SETUP
+================================================================================
+
+1. Install Chatbox AI from Google Play Store
+
+2. Open Chatbox, go to Settings
+
+3. Select "OpenAI API Compatible" as provider
+
+4. Fill in:
+   Base URL:        http://127.0.0.1:8080/v1
+   API Key:         local
+   Model Name:      local-model
+   Temperature:     0.0 (for factual, no hallucinations)
+
+5. Save and start chatting
+
+Note: 127.0.0.1 works when both Chatbox and Termux are on same phone.
+      For other devices, use your phone's local IP (e.g., 192.168.1.100)
+      WARNING: Exposes API to your network.
+
+================================================================================
+IMPORTANT NOTES
+================================================================================
+
+Security:
+  - By default, only your phone can access the API (127.0.0.1)
+  - To allow network access: HOST="0.0.0.0" ./start.sh
+  - This exposes the API to your local WiFi — consider firewall rules
+
+Privacy:
+  - All data stays local (no cloud, no servers)
+  - No tracking, analytics, or monitoring
+  - Complete control over your AI
+
+Model Choice:
+  - Select models without corporate safety filtering
+  - Dolphin, Hermes, Mistral, Llama 2 recommended
+  - Avoid commercial models with built-in censorship
+
+Temperature Setting:
+  - 0.0 = factual, deterministic, no hallucinations (RECOMMENDED)
+  - 0.3-0.7 = creative but less reliable
+  - Always use 0.0 for truth-seeking and objective information
+
+================================================================================
+CONTRIBUTING
+================================================================================
+
+Found an issue? Want to improve it?
+  Open an issue or PR: https://github.com/bogardbogard27-source/Bo_AI
+
+Ideas:
+  - Model auto-downloader
+  - Web UI frontend
+  - Conversation history storage
+  - Performance profiler
+  - Multi-model load balancer
+
+================================================================================
+LICENSE
+================================================================================
+
+MIT License — See LICENSE file
+
+================================================================================
+QUESTIONS?
+================================================================================
+
+1. Check README.md for detailed docs
+2. Run ./test.sh to diagnose problems
+3. Review config.sh for customization options
+4. Check models.sh for model management
+
+Start chatting uncensored, bias-free AI right now. 🚀
