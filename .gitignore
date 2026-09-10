@@ -1,0 +1,50 @@
+# .gitignore for Bo_AI
+
+# Models directory (GGUF files are huge!)
+models/
+*.gguf
+*.bin
+
+# Termux/Android specific
+.termux/
+.termux-properties
+
+# Build artifacts
+build/
+dist/
+*.o
+*.a
+*.so
+
+# IDE & editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.bak
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# Node/npm (if any)
+node_modules/
+package-lock.json
+yarn.lock
+
+# OS files
+.DS_Store
+Thumbs.db
